@@ -1,0 +1,13 @@
+%dw 2.0
+
+type auto_0252a569_2973_4241_b41a_2e07d2fc9e63_Input_Payload = {
+  billing_city?: String, 
+  billing_postal_code?: Number, 
+  account_id: String, 
+  billing_state?: String, 
+  description?: String, 
+  contract_term?: Number, 
+  status?: String, 
+  _?: Any
+} {"description": "post request datatypes"}
+

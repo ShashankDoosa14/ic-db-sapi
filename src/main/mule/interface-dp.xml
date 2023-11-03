@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+    <flow name="ic-db-sapi-main">
+        <http:listener path="/api/*" config-ref="ic-db-sapi-httpsListenerConfig">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="ic-db-sapi-config" />
+        <error-handler ref="Error_Handler" />
+    </flow>
+    <flow name="ic-db-sapi-console">
+        <http:listener path="/console/*" config-ref="ic-db-sapi-httpsListenerConfig">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="ic-db-sapi-config" />
+    </flow>
+    <flow name="delete:\contracts\(Id):ic-db-sapi-config">
+        <flow-ref doc:name="Ref delete-contract-db-implementation flow" doc:id="bd161f7b-1f77-47eb-949b-a47559ea7758" name="delete-contract-db-implementation" />
+    </flow>
+    <flow name="get:\contracts:ic-db-sapi-config">
+        <flow-ref doc:name="Ref getall-contract-db-implementation flow" doc:id="fecd35ad-a22e-43bd-ab39-6132ba4fd2af" name="getall-contract-db-implementation" />
+    </flow>
+    <flow name="get:\contracts\(Id):ic-db-sapi-config">
+        <flow-ref doc:name="Ref getById-contract-db-implementation flow" doc:id="343ed713-e1a5-473f-bccf-711514f001a1" name="getById-contract-db-implementation" />
+    </flow>
+    <flow name="post:\contracts:application\json:ic-db-sapi-config">
+        <flow-ref doc:name="Ref create-contract-db-implementation" doc:id="d8ca639c-7a6d-4637-85a7-8b0be71d8f20" name="create-contract-db-implementation" />
+    </flow>
+    <flow name="put:\contracts\(Id):application\json:ic-db-sapi-config">
+        <flow-ref doc:name="Ref update-contract-db-implementation flow" doc:id="d85f3d8c-3188-4dc3-a546-6d2eb10bde52" name="update-contract-db-implementation" />
+    </flow>
+</mule>

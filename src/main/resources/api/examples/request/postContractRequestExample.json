@@ -1,0 +1,16 @@
+{ 
+    "account_id": "0015j00001DjFu2AAF",
+    "billing_city": "Hyderabad",
+    "billing_country": "India",
+    "billing_postal_code": 	500085,
+    "billing_state": "Telangana",
+    "billing_street": "Ram nagar",
+    "description": "Contract",
+    "contract_term": 4,
+    "status": "Draft" ,
+    "sync_new_record_to_sfdc": true,
+    "sync_update_record_to_sfdc": true,
+    "external_id": "12345"
+
+}
+

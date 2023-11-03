@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="create-contract-db-implementation" doc:id="0252a569-2973-4241-b41a-2e07d2fc9e63" >
+		<logger level="INFO" doc:name="Create-contract-implementation flow started" doc:id="97d1458c-4a42-444f-bc07-4a71a48e5b99" message="Create db started"/>
+		<db:insert doc:name="Create-contract-on db" doc:id="7e6d9138-ac3b-47c2-85ad-4d27bf6d3ac8" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into freedb_shashank1.Contract ( account_id , billing_city, billing_country,
+    billing_postal_code,
+    billing_state ,
+    billing_street ,
+    description,
+    contract_term ,
+    status ,
+    sync_new_record_to_sfdc,
+    sync_update_record_to_sfdc,
+    external_id  , created_at  
+    ) values (:account_id , :billing_city, :billing_country,
+    :billing_postal_code,
+    :billing_state ,
+    :billing_street ,
+    :description,
+    :contract_term ,
+    :status ,
+    :sync_new_record_to_sfdc,
+    :sync_update_record_to_sfdc,
+    :external_id  , 
+    :created_at)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
+"account_id": payload.account_id , "billing_city": payload.billing_city, "billing_country": payload.billing_country,
+    "billing_postal_code": payload.billing_postal_code,
+    "billing_state": payload.billing_state,
+    "billing_street": payload.billing_street,
+    "description": payload.description,
+    "contract_term": payload.contract_term,
+   "status": payload.status,
+    "sync_new_record_to_sfdc": payload.sync_new_record_to_sfdc,
+    "sync_update_record_to_sfdc": payload.sync_update_record_to_sfdc,
+    "external_id": payload.external_id ,
+    "created_at": now()
+    
+
+}]]]></db:input-parameters>
+        </db:insert>
+		<ee:transform doc:name="DW Set To Create Contract Request Transform Message">
+            <ee:message>
+				<ee:set-payload resource="dwlScripts/createresponse.dwl" />
+            </ee:message>
+        </ee:transform>
+		<logger level="INFO" doc:name="Create-contract-implementation flow Ended" doc:id="1e1cded4-9563-46d0-97e9-bb2020812dea" message="Create db started"/>
+	</sub-flow>
+	<sub-flow name="getById-contract-db-implementation" doc:id="385d0ab7-5a41-4ca7-9eb8-c67707a0baf1" >
+		<logger level="INFO" doc:name="GetById-contract-implementation flow Started" doc:id="09d7c0e4-fbdc-464d-b062-46a91a2d33c1" message="GetById Ended"/>
+		<db:query-single doc:name="GetById-contract- on db" doc:id="62f0eb4e-2b43-44a9-b449-4bba0a8a1868" config-ref="Database_Config">
+			<db:sql><![CDATA[Select * from freedb_shashank1.Contract  Where id= :id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{"id": attributes.uriParams.Id}]]]></db:input-parameters>
+		</db:query-single>
+		<choice doc:name="Choice" doc:id="5dec4010-aefb-4bf1-8843-0d681ea0a164">
+			<when expression="#[sizeOf(payload) &gt; 0]">
+				<ee:transform doc:name="DW Set To Get By Id Contract error  Response Transform Message">
+            <ee:message>
+						<ee:set-payload resource="dwlScripts/getByIderrorresponse.dwl" />
+            </ee:message>
+        </ee:transform>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="DW Set To Get By Id Contract Response Transform Message" doc:id="20185728-b30a-4e4d-9b55-770e09906a9f">
+					<ee:message>
+						<ee:set-payload resource="dwlScripts/getByIdresponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="GetById-contract-implementation flow Ended" doc:id="30d18aa0-5b55-4fbc-ad45-850bf091721c" message="GetById Ended"/>
+	</sub-flow>
+	<sub-flow name="getall-contract-db-implementation" doc:id="7c0f3d9a-c38b-4da1-a52a-991e0a27d5bd" >
+		<logger level="INFO" doc:name="GetAll-contract-implementation flow Started" doc:id="f6228331-b057-4956-8e58-2bc8f4a9255f" message="Get all db Started"/>
+		<db:select doc:name="GetAll-contract-on db" doc:id="a178b7d3-7fb0-4aa2-ab03-420d7fe6c367" config-ref="Database_Config">
+			<db:sql><![CDATA[Select * from freedb_shashank1.Contract]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="DW Set To Getall Contract Response Transform Message">
+            <ee:message>
+				<ee:set-payload resource="dwlScripts/getallresponse.dwl" />
+            </ee:message>
+        </ee:transform>
+		<logger level="INFO" doc:name="GetAll-contract-implementation flow Ended" doc:id="3f74df6a-0e3c-449e-bc35-b9f7f4ce8eb9" message="Get all db Ended"/>
+	</sub-flow>
+	<sub-flow name="delete-contract-db-implementation" doc:id="136b72ce-dd88-4041-810a-40d2c9be09a3" >
+		<logger level="INFO" doc:name="Delete-contract-implementation flow Started" doc:id="31a4e848-f2d1-4712-9296-1acb32a53e1f" message="Delete db started"/>
+		<db:select doc:name="Delete_contract on db" doc:id="b2e510e9-f25c-400e-a3e9-c9c3d627e390" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from freedb_shashank1.Contract where id= :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id": attributes.uriParams.Id
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="adb32633-1f2f-4ded-ad7e-7ffcb1bbfd2c" >
+			<when expression="#[sizeOf(payload) &gt; 0]">
+				<db:delete doc:name="Delete-Contract-db-Implementation flow started" doc:id="1cccc867-9cc2-4a7c-8b99-0d67a7c72d42" config-ref="Database_Config">
+			<db:sql><![CDATA[delete from freedb_shashank1.Contract where id= :id;]]></db:sql>
+			<db:input-parameters><![CDATA[#[{"id": payload[0].id
+}]]]></db:input-parameters>
+		</db:delete>
+				<ee:transform doc:name="DW Set To delete Contract Response Transform Message">
+            <ee:message>
+						<ee:set-payload resource="dwlScripts/deleteresponse.dwl" />
+            </ee:message>
+        </ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="DW Set To DeleteContract error  Transform Message" doc:id="9cba24fe-bee0-4f0a-8066-353b6a21f369" >
+					<ee:message >
+						<ee:set-payload resource="dwlScripts/delete error response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Delete-contract-implementation flow Ended" doc:id="fbb47661-afe4-457f-b2ab-cbe0f5191b35" message="Delete db Ended"/>
+	</sub-flow>
+	<sub-flow name="update-contract-db-implementation" doc:id="ecc982fb-f6b8-47f1-afc6-bf21e27cfc69" >
+		<logger level="INFO" doc:name="Update-contract-implementation flow Ended" doc:id="38cdf6e7-ffc7-454f-92eb-835ad207b160" message="Update-db-Started" />
+		<set-variable value="#[attributes.uriParams.Id]" doc:name="Set Variable" doc:id="f0daf172-8f4e-4497-b128-7aeeb9938f07" variableName="id"/>
+		<db:query-single doc:name="getById _Contrac-on db" doc:id="09adc2ef-c826-4881-8f04-26fe3660a240" config-ref="Database_Config" target="idVar">
+			<db:sql><![CDATA[SELECT * FROM freedb_shashank1.Contract WHERE id= :id]]></db:sql>
+			<db:parameter-types />
+			<db:input-parameters><![CDATA[#[{
+"id": vars.id
+}]]]></db:input-parameters>
+		</db:query-single>
+		<logger level="INFO" doc:name="Logger" doc:id="ca4ab3ce-a64e-48f2-964c-f3ad343664b3" message="#[vars.idVar]"/>
+		<choice doc:name="Choice" doc:id="47546684-917e-40cf-a913-3a07801d3878" >
+			<when expression="#[vars.idVar.id == Null]">
+				<ee:transform doc:name="DW Set To Update Contract Error Transform Message" doc:id="9c0b3c93-7528-4d02-b24b-16bd703eb8b1">
+			<ee:message>
+						<ee:set-payload resource="dwlScripts/update error response.dwl" />
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<db:update doc:name="Update_contract on db " doc:id="05c4276d-c3e3-4f67-a887-fff4fbd93b86" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE freedb_shashank1.Contract
+SET account_id= :account_id, billing_city= :billing_city, billing_country= :billing_country,
+    billing_postal_code= :billing_postal_code,
+   billing_state= :billing_state,
+   billing_street = :billing_street,
+   description = :description,
+   contract_term= :contract_term,
+   status= :status,
+   sync_new_record_to_sfdc= :sync_new_record_to_sfdc,
+   sync_update_record_to_sfdc= :sync_update_record_to_sfdc,
+   external_id= :external_id , updated_at= :updated_at WHERE id= :id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"id": vars.id,
+"account_id": payload.account_id, "billing_city": payload.billing_city, "billing_country": payload.billing_country,
+    "billing_postal_code": payload.billing_postal_code,
+    "billing_state": payload.billing_state,
+    "billing_street": payload.billing_street,
+    "description": payload.description,
+    "contract_term": payload.contract_term,
+   "status": payload.status,
+    "sync_new_record_to_sfdc": payload.sync_new_record_to_sfdc,
+    "sync_update_record_to_sfdc": payload.sync_update_record_to_sfdc,
+    "external_id": payload.external_id , 
+    "updated_at": now()
+    
+}]]]></db:input-parameters>
+		</db:update>
+				<ee:transform doc:name="DW Set To Update Contract Response  Transform Message" doc:id="8497fb6b-d899-4522-a6af-95768f5ff186">
+					<ee:message>
+						<ee:set-payload resource="dwlScripts/update response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Update-contract-implementation flow Ended" doc:id="44a88941-b21c-4725-8fb2-eb509ccc8e95" message="Update-db-Ended" />
+	</sub-flow>
+</mule>

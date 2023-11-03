@@ -1,0 +1,11 @@
+#%RAML 1.0 Library
+types:
+  delete_response:
+    type: object
+    properties:
+        is_success:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: string

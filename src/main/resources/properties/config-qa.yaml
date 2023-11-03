@@ -1,0 +1,9 @@
+db:
+   user: "![ N/e+Z6jv60yXxEWaANSm3jNesQVZ+MMV]"
+   password: "![sCOEtBQvdMAOeb94TWgMXQ==]"
+   databasename: "![N/e+Z6jv60yXxEWaANSm3jNesQVZ+MMV]"
+
+discovery:
+         id:  "![Gr1FcvqnJxnR2LmDUrkRXg==]"
+ssl:
+   password: "![KBYEEZ7MyV6CGVr6biyDMQ==]"

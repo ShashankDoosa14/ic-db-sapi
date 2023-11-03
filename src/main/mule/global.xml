@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+	<http:listener-config name="ic-db-sapi-httpsListenerConfig" doc:name="HTTP Listener config" doc:id="1184e7e1-54ff-41c9-a197-f9494fc42e41" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="${https.port}" >
+			<tls:context >
+				<tls:key-store type="jks" path="keystore/server-keystore.jks" keyPassword="${secure::ssl.password}" password="${secure::ssl.password}" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="7e30658f-d438-4461-938d-a6506a622c3e" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${secure::db.user}" password="${secure::db.password}" database="${secure::db.databasename}" />
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="89b6fc47-1cef-4e3c-98a8-e21799f17382" file="properties/config-common.yaml" />
+	<secure-properties:config name="Secure_Properties_Config1" doc:name="Secure Properties Config" doc:id="bb163f0e-a8a4-443b-affb-0e5e45791ceb" file="properties/config-qa.yaml" key="securekey" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<configuration doc:name="Configuration" doc:id="8905085c-32d3-411b-a334-7c0aaf0f7875" defaultErrorHandler-ref="Error_Handler" />
+	<api-gateway:autodiscovery apiId="${secure::discovery.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="d671a726-472f-465d-8020-a3139a590a5f" flowRef="ic-db-sapi-main" />
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="f227f3fa-f91f-4a25-aa71-cb039c2e5471" name="ic-db-sapi-config" api="ic-db-sapi.raml" />
+</mule>

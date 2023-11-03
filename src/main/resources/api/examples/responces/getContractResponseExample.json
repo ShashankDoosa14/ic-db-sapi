@@ -1,0 +1,49 @@
+[ {
+        "account_id": "0015j00001DjFu2AAF",
+        "billing_city": "Hyderabad",
+        "billing_country": "India",
+        "billing_postal_code": 	500085,
+        "billing_state": "Telangana",
+        "billing_street": "Ram nagar",
+        "description": "Contract",
+        "id": "8005j000000UOPKAA4",
+        "contract_number": "00000106",
+        "created_by_id": "0015j00001DjFu2AAF",
+        "last_modified_date": "2023-10-25T15:16:40.000Z",
+        "contract_term": 5,
+        "created_date": "2023-10-25T15:16:40.000Z",
+        "is_deleted": "true",
+        "owner_id": "OwnerId",
+        "status": "Draft",
+        "system_modstamp": "2023-10-25T15:16:40.000Z" , "sync_new_record_to_sfdc": true,
+        "sync_update_record_to_sfdc": true,
+        "external_id": "12345"
+
+      
+      },
+
+        {
+            "account_id": "0015j00001DjFu2AAF",
+        "billing_city": "Hyderabad",
+        "billing_country": "India",
+        "billing_postal_code": 	500085,
+        "billing_state": "Telangana",
+        "billing_street": "Ram nagar",
+        "description": "Contract",
+        "id": "8005j000000UOPKAA4",
+        "contract_number": "00000106",
+        "created_by_id": "0015j00001DjFu2AAF",
+        "last_modified_date": "2023-10-25T15:16:40.000Z",
+        "contract_term": 5,
+        "created_date": "2023-10-25T15:16:40.000Z",
+        "is_deleted": "true",
+        "owner_id": "OwnerId",
+        "status": "Draft",
+        "system_modstamp": "2023-10-25T15:16:40.000Z" ,
+        "sync_new_record_to_sfdc": true,
+    "sync_update_record_to_sfdc": true,
+    "external_id": "12345"
+
+      
+      }
+]
